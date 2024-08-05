@@ -74,6 +74,8 @@ def calculate_correction_factors(wavelength, alpha=None):
     
     return CA, CB, CC, CE, T1, T2
 
+
+# CHECK THIS! Compare to Table A.4
 def calculate_mpe_ocular(wavelength, time):
     """Calculate MPE for ocular exposure."""
     CA, CB, CC, CE, T1, T2 = calculate_correction_factors(wavelength)
@@ -128,14 +130,17 @@ def calculate_mpe_ocular(wavelength, time):
     
     return None, None
 
+
+# CHECK THIS! Compare to Table A.5
 def calculate_mpe_skin(wavelength, time):
     """Calculate MPE for skin exposure."""
-    CA, _, _, _ = calculate_correction_factors(wavelength)
+    CA, CB, CC, CE, T1, T2 = calculate_correction_factors(wavelength)
     
     if 0.180 <= wavelength < 0.302:
         return 3e-3, None
     elif 0.302 <= wavelength < 0.315:
-        return 3e-3 * 10**(0.302 - wavelength), None
+        # WRONG! Check Table A.5
+        return 3e-3 * 10**(0.302 - wavelength), None 
     elif 0.315 <= wavelength < 0.400:
         if time <= 10:
             return 0.56 * time**0.25, None
@@ -199,8 +204,10 @@ def calculate_mpe(wavelength, time):
     print(f"Energy: {format_output(skin_energy, 'J/cm^2')}")
     print(f"Irradiance: {format_output(skin_irradiance, 'W/cm^2')}")
 
-# Example usage
-wavelength = 0.532  # μm (e.g., green laser)
-exposure_time = 0.25  # seconds
 
-calculate_mpe(wavelength, exposure_time)
+if __name__ == "__main__":
+    # Example usage
+    wavelength = 0.532  # μm (e.g., green laser)
+    exposure_time = 0.25  # seconds
+
+    calculate_mpe(wavelength, exposure_time)
